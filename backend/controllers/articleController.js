@@ -2,14 +2,14 @@ import Article from "../models/articleModel.js";
 import cloudinary from "../config/cloudinary.js";
 
 const postArticle = async (req, res) => {
-    const { title, content, images } = req.body;
+    const { title, content, images,category } = req.body;
     const userId = req.user._id;
 
     try {
-        if (!title || !content) {
+        if (!title || !content ||!category) {
             return res.status(400).json({
                 success: false,
-                message: "You need title and content to post an article!",
+                message: "You need title, content, and category to post an article!",
             });
         }
 
@@ -29,6 +29,7 @@ const postArticle = async (req, res) => {
             title,
             content,
             userId,
+            category,
             images: imageUrls,
         });
 
@@ -46,14 +47,14 @@ const postArticle = async (req, res) => {
 };
 
 const updateArticle = async (req, res) => {
-    const { title, content, images } = req.body; // `images` are base64 or URLs
+    const { title, content, images,category } = req.body; // `images` are base64 or URLs
     const { id } = req.params;
 
     try {
-        if (!title || !content) {
+        if (!title || !content ||!category) {
             return res.status(400).json({
                 success: false,
-                message: "You need title and content to update an article!",
+                message: "You need title, content, and category to update an article!",
             });
         }
 
@@ -99,7 +100,7 @@ const updateArticle = async (req, res) => {
         // Update article
         const updatedArticle = await Article.findByIdAndUpdate(
             id,
-            { title, content, images: finalImages },
+            { title, content, category, images: finalImages },
             { new: true }
         );
 

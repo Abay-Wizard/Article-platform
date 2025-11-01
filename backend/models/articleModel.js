@@ -13,6 +13,10 @@ const articleSchema=new mongoose.Schema({
         type:String,
         required:true
     },
+    category:{
+      type:String,
+      required:true
+    },
     images:[String],
     default:[]
 })

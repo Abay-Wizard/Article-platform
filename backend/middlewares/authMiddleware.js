@@ -6,9 +6,9 @@ const authMiddleware=async(req,res,next)=>{
         if(!token){
             return res.status(401).json({success:false,message:'No token is provided!'})
         }
-        const decoded = jwt.verify({token},process.env.jwt_secret)
+        const decoded = jwt.verify(token,process.env.jwt_secret)
         if(!decoded){
-            return res.status.status(401).json({success:false,message:'Invalid token'})
+            return res.status(401).json({success:false,message:'Invalid token'})
         }
        const user=await User.findById(decoded.id).select('-password')
        if(!user){
