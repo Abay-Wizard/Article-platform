@@ -4,7 +4,7 @@ const authMiddleware=async(req,res,next)=>{
    const token =req.cookies.jwt
     try {
         if(!token){
-            return res.status(401).json({success:false,message:'No token is provided!'})
+            return res.status(401).json({success:false,message:'You should login first!'})
         }
         const decoded = jwt.verify(token,process.env.jwt_secret)
         if(!decoded){

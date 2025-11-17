@@ -1,9 +1,9 @@
 import React from 'react'
-
+import Articles from '../pages/Articles'
 const Home = () => {
   return (
-    <div>
-      
+    <div className='w-full'>
+      <Articles/>
     </div>
   )
 }

@@ -71,20 +71,48 @@ const checkUser=async(req,res)=>{
     }
 }
 
-const updateProfile=async(req,res)=>{
-    const {profilePic,name} =req.body
-      try {
-        const userId=req.user._id
-        if(!profilePic ||!name){
-            return res.status(401).json({success:false,message:'You need to upload a picture and fill out your name!'})
-        }
-      const cloudResponse=await cloudinary.uploader.upload(profilePic)
-      const updatedUser=await User.findByIdAndUpdate(userId,{profilePic:cloudResponse.secure_url,fullName:name},{new:true})
-      res.status(201).json({success:true,message:'Profile updated successfully!',data:updatedUser})
-      } catch (error) {
-        
-      }
+const getUsers=async(_,res)=>{
+    try {
+        const users=await User.find().sort({createdAt:-1})
+        res.status(200).json({success:true,message:'Users fetched successfully!',data:users})
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({success:false,message:'Internal server error!'})
+    }
 }
+
+const updateProfile = async (req, res) => {
+    const { profilePic, fullName, profession } = req.body
+
+    try {
+        const userId = req.user?._id
+        if (!userId) {
+            return res.status(401).json({ success: false, message: 'Unauthorized' })
+        }
+
+        if (!profilePic || !fullName || !profession) {
+            return res.status(400).json({ success: false, message: 'Picture, name, and profession are required!' })
+        }
+
+        const cloudResponse = await cloudinary.uploader.upload(profilePic)
+
+        const updatedUser = await User.findByIdAndUpdate(
+            userId,
+            { profilePic: cloudResponse.secure_url, fullName, profession },
+            { new: true }
+        )
+        
+        res.status(201).json({
+            success: true,
+            message: 'Profile updated successfully!',
+            data: updatedUser 
+        })
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({ success: false, message: 'Server error', error: error.message })
+    }
+}
+
 
 const logoutUser=async(_,res)=>{
     try {
@@ -98,4 +126,4 @@ const logoutUser=async(_,res)=>{
     }
 }
 
-export {loginUser,logoutUser,registerUser,checkUser,updateProfile}
+export {loginUser,logoutUser,registerUser,checkUser,updateProfile,getUsers}

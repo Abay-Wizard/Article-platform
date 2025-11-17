@@ -35,11 +35,9 @@ const SignUp = () => {
       const success = await SignUp(data);
       if (success) {
         navigate("/login");
-      } else {
-        toast.error(res?.data?.message || "Signup failed.");
       }
     } catch (error) {
-      //toast.error(error?.response?.data?.message || "Something went wrong!");
+     console.log(error)
     } 
   };
 
@@ -122,7 +120,7 @@ const SignUp = () => {
           <button
             type="submit"
             disabled={isSigningUp}
-            className={`w-full bg-purple-600 text-white p-3 rounded-lg font-semibold transition duration-300 
+            className={`w-full bg-purple-600 cursor-pointer text-white p-3 rounded-lg font-semibold transition duration-300 
             ${isSigningUp ? "opacity-70 cursor-not-allowed" : "hover:bg-purple-700"}`}
           >
             {isSigningUp ? "Signing up..." : "Sign Up"}

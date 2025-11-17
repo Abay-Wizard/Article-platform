@@ -19,7 +19,7 @@ const articleSchema=new mongoose.Schema({
     },
     images:[String],
     default:[]
-})
+},{timestamps:true})
 
 const Article =mongoose.model('Article',articleSchema)
 export default Article

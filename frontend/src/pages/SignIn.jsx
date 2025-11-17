@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { userStore } from '../store/userStore';
 import { useNavigate, Link } from 'react-router-dom';
-import { toast } from 'react-hot-toast';
 import { Eye, EyeOff } from 'lucide-react';
 
 const SignIn = () => {
-  const { Login } = userStore();
+  const { Login,isLoggingIn } = userStore();
   const navigate = useNavigate();
   const [data, setData] = useState({ email: '', password: '' });
   const [showPassword, setShowPassword] = useState(false);
@@ -63,9 +62,10 @@ const SignIn = () => {
           </div>
           <button
             type="submit"
+            disabled={isLoggingIn}
             className="bg-purple-600 text-white p-3 cursor-pointer rounded-md hover:bg-purple-700 transition text-base font-medium"
           >
-            Sign In
+            {isLoggingIn? 'Signing in ...' :'Sign In'}
           </button>
         </form>
         <p className="mt-4 text-sm text-gray-500 text-center">

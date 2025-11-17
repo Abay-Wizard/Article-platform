@@ -156,27 +156,51 @@ const deleteArticle = async (req, res) => {
     }
 };
 
-const getUserArticles = async (req, res) => {
-    const userId = req.user._id
+const getSingleArticle=async(req,res)=>{
+    const {id}=req.params
     try {
-        const articles = await Article.find({ userId })
-        if (!articles) {
-            
-            return res.status(404).json({ success: false, message: 'Articles not found!' })
-        }
-        res.status(200).json({ success: true, message: 'Articles fetched successfully!',data:articles })
-
+        const article=await Article.findById(id)
+        res.status(200).json({success:true,message:'Article fetched successfully!',data:article})
     } catch (error) {
         console.log(error?.message)
-        res.status(500).json({ success: false, message: 'Internal server error!' })
+        res.status(500).json({success:false,message:'Internal server error!'})
     }
 }
+
+const getUserArticles = async (req, res) => {
+  const userId = req.user._id;
+
+  try {
+    const articles = await Article.find({ userId })
+      .populate('userId', 'fullName profession profilePic')
+      .sort({ createdAt: -1 });
+
+    if (!articles.length) {
+      return res.status(404).json({
+        success: false,
+        message: 'No articles found for this user!',
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Articles fetched successfully!',
+      data: articles,
+    });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error!',
+    });
+  }
+};
 
 
 const getAllArticles = async (_, res) => {
     try {
-        const articles = await Article.find({})
-        if (!articles || articles.length===0) {
+        const articles = await Article.find({}).populate('userId','fullName profession profilePic').sort({createdAt:-1})
+        if (!articles.length) {
             return res.status(404).json({ success: false, message: 'Articles not found!' })
         }
         res.status(200).json({ success: true, message: 'Articles fetched successfully!',data:articles })
@@ -186,4 +210,4 @@ const getAllArticles = async (_, res) => {
     }
 }
 
-export { postArticle, updateArticle, getAllArticles, getUserArticles, deleteArticle }
+export { postArticle, updateArticle, getAllArticles, getUserArticles, deleteArticle,getSingleArticle }
